@@ -1,10 +1,16 @@
 from math import log
 
+unique_count = dict()
 lmd1 = 0#???
 lmd2 = 0#???
 V = 1000000
 W = 0
 H = 0
+
+with open('../test/02-unique-count.txt', 'r') as unique_file:
+    for line in unique_file.read().split('\n')[:-1]:
+        key, value = line.split('\t')
+        unique_count[key] = int(value)
 
 with open('../test/02-model-file.txt', 'w') as model_file:#load model into probs
     for line in test_file
