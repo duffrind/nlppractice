@@ -1,22 +1,32 @@
-create map counts, context_counts
 counts = dict()
 context_counts = dict()
 
-open training_file
-    for line in training_file:
-        split line into an array of words
-        append '</s>' to the end
-        prepend '<s>' to the beginning of words
-        for each i in 1 to length(words)-1 # Note: starting at 1, after <s>
-            counts['wi-1 wi'] += 1
-            context_counts['wi-1'] += 1
-            counts['wi'] += 1
-            context_counts[''] += 1
+test = False
+file_name = '../data/wiki-en-train.word'
+if test:
+    file_name = '../test/02-train-input.txt'
 
-open model_file for writing
-    for each ngram, count in counts
-        split ngram into an array of words
-        remove the last element of words
-        join words into context
-        probability = counts[ngram]/context_counts[context]
-        print ngram, probability to model_file
+with open(file_name, 'r') as training_file:
+    for line in training_file.read().split('\n')[:-1]:
+        words = ['<s>'] + line.split() + ['</s>']
+        for i in range(1, len(words)): # Note: starting at 1, after <s>
+            counts[words[i - 1] + ' ' + words[i]] = counts.get(words[i - 1] + ' ' + words[i], 0) + 1
+            context_counts[words[i - 1]] = context_counts.get(words[i - 1], 0) + 1
+            counts[words[i]] = counts.get(words[i], 0) + 1
+            context_counts[''] = context_counts.get('', 0) + 1
+
+with open('../test/02-model-file.txt', 'w') as model_file:
+    for ngram, count in counts.iteritems():
+        words = ngram.split(' ')
+        _ = words.pop()
+        context = ' '.join(words)
+        probability = float(counts[ngram]) / context_counts[context]
+        model_file.write(ngram + '\t' + str(probability) + '\n') #to model_file
+
+# Test train-bigram on test/02-train-input.txt
+# Train the model on data/wiki-en-train.word
+# Calculate entropy on data/wiki-en-test.word (if linear interpolation, test different values of λ2)
+
+# Challenge:
+# Use Witten-Bell smoothing (Linear interpolation is easier)
+# Create a program that works with any n (not just bigram)

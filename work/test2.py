@@ -1,13 +1,13 @@
 from math import log
 
-lmd1 = ???
-lmd2 = ???
+lmd1 = 0#???
+lmd2 = 0#???
 V = 1000000
 W = 0
 H = 0
 
-load model into probs
-    for each line in test_file
+with open('../test/02-model-file.txt', 'w') as model_file:#load model into probs
+    for line in test_file
         split line into an array of words
         append '</s>' to the end and '<s>' to the beginning of words
         for each i in 1 to length(words)-1 # Note: starting at 1, after <s>
@@ -16,4 +16,4 @@ load model into probs
             H += -log2(P2)
             W += 1
 
-print 'entropy = ' + H/W
+print 'entropy = ' + H / W
