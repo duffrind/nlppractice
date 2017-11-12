@@ -9,6 +9,6 @@ with open('../test/01-train-input.txt', 'r') as training_file:
             total_count += 1
 
 with open('../test/01-model-file.txt', 'w') as model_file:
-    for word, count in counts.iteritems():
+    for word, count in counts.items():
         probability = float(counts[word])/total_count
         model_file.write(word + '\t' + str(probability) + '\n')

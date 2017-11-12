@@ -25,5 +25,5 @@ with open('../test/01-test-input.txt', 'r') as test_file:
                 unk += 1
             H += -log(P, 2)
 
-print "entropy = " + str(H/W) # currently, H is incorrect
-print "coverage = " + str(float(W-unk)/W)
+print("entropy = " + str(H/W))
+print("coverage = " + str(float(W-unk)/W))

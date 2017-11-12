@@ -1,8 +1,9 @@
 counts = dict()
 context_counts = dict()
 unique_count = dict()
+total_count = dict()
 
-test = True # False
+test = False # False
 file_name = '../data/wiki-en-train.word'
 if test:
     file_name = '../test/02-train-input.txt'
@@ -18,9 +19,10 @@ with open(file_name, 'r') as training_file:
         for i in range(n - 1, len(words)): # Note: starting at 1, after <s>
             ngram = list()
             for j in range(i - (n-1), i + 1):
-                ngram.append(words[j])
+                ngram.append(words[j].lower())
             unique_count[ngram[0]] = unique_count.get(ngram[0], set())
             unique_count[ngram[0]].add(' '.join(ngram[1:]))
+            total_count[ngram[0]] = total_count.get(ngram[0], 0) + 1
             ngram_joined = ' '.join(ngram)
             counts[ngram_joined] = counts.get(ngram_joined, 0) + 1
             _ = ngram.pop()
@@ -30,7 +32,7 @@ with open(file_name, 'r') as training_file:
             context_counts[''] = context_counts.get('', 0) + 1
 
 with open('../test/02-model-file.txt', 'w') as model_file:
-    for ngram, count in counts.iteritems():
+    for ngram, count in counts.items():
         words = ngram.split(' ') # split on space is implied, but explicit is better than implicit (?)
         _ = words.pop()
         context = ' '.join(words)
@@ -38,8 +40,20 @@ with open('../test/02-model-file.txt', 'w') as model_file:
         model_file.write(ngram + '\t' + str(probability) + '\n') #to model_file
 
 with open('../test/02-unique-count.txt', 'w') as unique_file:
-    for key, values in unique_count.iteritems():
+    for key, values in unique_count.items():
         unique_file.write(key + '\t' + str(len(values)) + '\n')
+
+with open('../test/02-total-count.txt', 'w') as total_file:
+    for key, values in total_count.items():
+        total_file.write(key + '\t' + str(values) + '\n')
+
+#with open('../test/02-bigram-unique-count.txt', 'w') as unique_file:
+#    for key, values in counts.items():
+#        unique_file.write(key + '\t' + str(values) + '\n')
+
+#with open('../test/02-bigram-total-count.txt', 'w') as total_file:
+#    for key, values in total_count.items():
+#        total_file.write(key + '\t' + str(values) + '\n')
 
 # Test train-bigram on test/02-train-input.txt
 # Train the model on data/wiki-en-train.word
